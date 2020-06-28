@@ -10,3 +10,11 @@ class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'password', 'urls',)
+        read_only_fields = ('id',)
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def update(self, instance, validated_data):
+        user = super().update(instance, validated_data)
+        user.set_password(validated_data['password'])
+        user.save()
+        return user

@@ -28,7 +28,7 @@ class LoginView(View):
         self.request.body['email'] = form.data.get('email')
 
         return super().form_valid(form)
-햣
+
 
 def logout(request):
     if 'user' in request.session:
