@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'users',
     'urls',
     'core',
@@ -86,9 +87,9 @@ WSGI_APPLICATION = 'Url_Shortener.wsgi.application'
 #     }
 # }
 
-DATABASE = {
+DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_pycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'HOST': os.environ['DB_HOST'],
         'NAME': os.environ['DB_NAME'],
         'USER': os.environ['DB_USER'],
@@ -139,16 +140,27 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.TokenAuthentication',
-#     ],
-    # 'DEFAULT_THROTTLE_CLASSES': [
-    #     'rest_framework.throttling.AnonRateThrottle',
-    #     'rest_framework.throttling.UserRateThrottle',
-    # ],
-    # 'DEFAULT_THROTTLE_RATES': {
-    #     'anon': '1/user',
-    #     'user': '5/user',
-    # },
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'core.paginations.IDPagination',
+    'PAGE_SIZE': 5,
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '100/s',
+    },
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}
