@@ -2,8 +2,8 @@ from django.db import models
 
 
 class User(models.Model):
-    email = models.EmailField(max_length=64)
-    password = models.CharField(max_length=32)
+    is_membership = models.BooleanField(default=False)
 
-    class Meta:
-        db_table = 'Users'
+    def save(self, *args, **kwargs):
+        self.set_password(self.password)
+        super().save(*args, **kwargs)
