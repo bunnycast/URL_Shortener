@@ -1,5 +1,4 @@
 from django.test import TestCase
-from rest_framework import status
 from rest_framework.test import APITestCase
 
 
@@ -12,8 +11,7 @@ class UrlViewSetTestCase(APITestCase):
             'url': 'www.google.com',
         }
         response = self.client.post('/api/urls/shorten', data=data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data['url'], data['url'])
 
         self.fail()
