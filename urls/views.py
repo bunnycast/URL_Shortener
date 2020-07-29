@@ -1,3 +1,6 @@
+import time
+
+from django.core.cache import cache
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -17,4 +20,21 @@ class UrlViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(data=serializer.data, status=201)
+        return Response(serializer.data, 201)
+
+    # use caching
+    def retrieve(self, request, *args, **kwargs):
+        key = kwargs['pk']
+        instance = cache.get(key)
+
+        if not instance:
+
+            time.sleep(3)
+            print('sleep')
+
+            instance = self.get_object()
+            cache.set(key, instance, 60)
+
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
