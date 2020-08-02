@@ -15,7 +15,9 @@ import os
 import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import sentry_sdk
 from environ import ImproperlyConfigured
+from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env_file = os.path.join(BASE_DIR) + '/.env'
@@ -133,9 +135,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'ko-kr'     #'en-us'
+LANGUAGE_CODE = 'ko-kr'  # 'en-us'
 
-TIME_ZONE = 'ASIA/SEOUL'    #'UTC'
+TIME_ZONE = 'ASIA/SEOUL'  # 'UTC'
 
 USE_I18N = True
 
@@ -149,3 +151,21 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 INTERNAL_IPS = ['127.0.0.1']
+
+sentry_sdk.init(
+    dsn="https://91d6c511768440d3bc3592e71fae3e5c@o427979.ingest.sentry.io/5372846",
+    integrations=[DjangoIntegration()],
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
+
+# send mail settings https://devgyugyu.tistory.com/14
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = 'berzzubunny@gmail.com'
+EMAIL_HOST_PASSWORD = 'zkafifnioswdawfc'    # 별도의 앱 비밀번호 발급받아야 함
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
