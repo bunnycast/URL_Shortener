@@ -20,21 +20,34 @@ class UrlViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
+        self.check(0, 1, c=3)
+
         return Response(serializer.data, 201)
+
+    def check(self, a, b, c=None):
+        a = 100
+        b = 'abc'
+        c = {'key': 'val'}
+
+        return print(a / b)
 
     # use caching
     def retrieve(self, request, *args, **kwargs):
-        key = kwargs['pk']
-        instance = cache.get(key)
+        # a = {'key': 'val'}
+        # a['val']
 
-        if not instance:
+        aa = 100
+        bb = 'abc'
 
-            time.sleep(3)
-            print('sleep')
-
-            instance = self.get_object()
-            cache.set(key, instance, 60)
-
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
-
+        # key = kwargs['pk']
+        # instance = cache.get(key)
+        #
+        # if not instance:
+        #     time.sleep(3)
+        #     print('sleep')
+        #
+        #     instance = self.get_object()
+        #     cache.set(key, instance, 60)
+        #
+        # serializer = self.get_serializer(instance)
+        # return Response(serializer.data)
